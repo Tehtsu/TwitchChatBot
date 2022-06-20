@@ -1,0 +1,17 @@
+{
+  "name": "twitchchatbot",
+  "version": "1.0.0",
+  "description": "Twitch Chat Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TetsuyaGames",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
+    "play-sound": "^1.1.5",
+    "tmi.js": "^1.8.5"
+  }
+}
