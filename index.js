@@ -19,9 +19,11 @@ const weatherApiBaseUrl = 'https://api.openweathermap.org';
 
 let helpLoopInterval;
 let socialLoopInterval;
+const substr = ' ';
+
 let randomNumber = Math.floor(Math.random() * 20);
 console.log(randomNumber);
-let difficultSet = false;
+
 
 client.connect().then(() => {
 
@@ -50,10 +52,13 @@ client.connect().then(() => {
 
         // help command
         if (command === 'commands' || command === 'help' || command === 'cmd') {
-            client.say(channel, 'Folgende commands gibt es: !wetter, !echo, !hey, !cmd, !bud, !heim, !fanfare, !lurk, !guess <zahl>, !dice und !würfeln. Bei einigen commands könnt ihr optional noch einen Wert wie eine Stadt oder eine Zahl eingeben.')
+            client.say(channel, 'Folgende commands gibt es: !wetter, !echo, !hey, !hallo, !cmd, !bud, !heim, !fanfare, !lurk, !guess <zahl>, !dice und !würfeln. Bei einigen commands könnt ihr optional noch einen Wert wie eine Stadt oder eine Zahl eingeben.')
         }
 
         if (command === 'hey') {
+            player.play('./sounds/leonHallo.mp3', function (err) {
+                if (err) throw err
+            })
             client.say(channel, `Hey @${tags['display-name']}, was geht ab?`);
         }
 
@@ -64,7 +69,7 @@ client.connect().then(() => {
         // game commands
         if (command === 'dice' || command === 'würfeln') {
 
-            const substr = ' ';
+            
             if (message.includes(substr)) {
                 const newMessage = message.split(' ');
                 newMessage.splice(0, 1);
@@ -112,10 +117,20 @@ client.connect().then(() => {
             }
         }
 
+        if (command === 'friends'){
+
+        }
+
 
         /**
          * SOUND COMMANDS
          */
+        if (command === 'hallo') {
+            player.play('./sounds/leonHallo.mp3', function (err) {
+                if (err) throw err
+            })
+        }
+
         if (command === 'bud') {
             player.play('./sounds/Bud.mp3', function (err) {
                 if (err) throw err
@@ -142,7 +157,7 @@ client.connect().then(() => {
          * WETTER COMMAND
          */
         if (command === 'wetter') {
-            const substr = ' ';
+            
             if (message.includes(substr)) {
                 const newMessage = message.split(' ');
                 newMessage.splice(0, 1);
@@ -187,7 +202,7 @@ client.connect().then(() => {
          * GAME COMMANDS
          */
         if (command === 'guess') {
-            const substr = ' ';
+            
             if (message.includes(substr)) {
                 const numberMessage = message.split(' ');
                 numberMessage.splice(0, 1);
