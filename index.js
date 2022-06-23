@@ -124,7 +124,7 @@ client.connect().then(() => {
         if (command === 'friends'){
             try{
             const [username] = args;
-                const userUrl = `${twitchApiBaseUrl}/users?login=${username}`;
+                const userUrl = `${twitchApiBaseUrl}/users?login=tetsuyagames`;
 
                 const headers = {
                     headers: {
