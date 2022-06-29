@@ -18,7 +18,9 @@ const weatherApiBaseUrl = 'https://api.openweathermap.org';
 
 let helpLoopInterval;
 let socialLoopInterval;
-let tagIsSet = false
+let specialLoopInterval;
+let tagIsSet = false;
+const specials = true;
 const substr = ' ';
 
 let randomNumber = Math.floor(Math.random() * 20);
@@ -53,6 +55,11 @@ client.connect().then(() => {
                 YouTube: https://www.youtube.com/user/TAirLP \n
                 Website: https://nerd-zone.eu`)
             }, 900000)
+
+            console.log('start special loop')
+            specialLoopInterval = setInterval(() => {
+                client.say(channel, 'Am 27.08.2022 gibt es ab 22 Uhr einen Birthday Stream.')
+            }, 90000)
             break;
 
             /**
@@ -86,6 +93,13 @@ client.connect().then(() => {
                     if (err) throw err
                 })
                 break; 
+            case 'shedule': case 'zeitplan':
+                client.say(channel, 'Mittwoch und Freitag 22 Uhr')
+                if(specials){
+                client.say(channel, 'Am 27.08 gibt es ab 22 Uhr ein Birthday Special')
+                
+                }
+                break;
 
             /**
             * LURK COMMAND
@@ -235,6 +249,7 @@ client.connect().then(() => {
                 } catch (err) {
                     console.log(err);
                 };
+                break;
 
             /**
              * SHOUTOUT COMMAND
