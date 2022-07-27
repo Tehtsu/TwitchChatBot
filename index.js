@@ -191,7 +191,6 @@ client.connect().then(() => {
              */
             case 'so':
                 if (tags['user-type'] !== 'mod' && tags.username !== 'tetsuyagames') return;
-                // functions.shoutout(twitchApiBaseUrl, client, channel, username, axios)
                 try {
                     const [username] = args
                     let shoutout = "";
