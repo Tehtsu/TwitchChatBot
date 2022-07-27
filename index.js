@@ -8,6 +8,7 @@ const games = require('./games.js')
 const friends = require('./friends.js')
 const loops = require('./loops.js')
 const textCommands = require('./words.js')
+const overlay = require('./app.js')
 
 const client = new tmi.Client({
     options: { debug: true },
@@ -27,7 +28,16 @@ const specials = true
 const substr = ' '
 let lie = 0
 let die = 0
-let streamer = ['tedwigtv', 'profi4mateur', 'niluus_arcade']
+let loopstart = true
+let streamer = [/* 'tetsuyagames', */
+    'tedwigtv',
+    'profi4mateur',
+    'niluus_arcade',
+    'mrs_doerte',
+    'battlevbk',
+    'aimgel0oz',
+    'gracelesssky'
+]
 let viewer = []
 
 let randomNumber = Math.floor(Math.random() * 20)
@@ -38,19 +48,25 @@ client.connect().then(() => {
 
     client.on('message', async (channel, tags, message, self) => {
 
-        loops.helpLoop(channel, client)
-        loops.socialLoop(channel, client)
-        if (specials) {
-            loops.specialLoop(channel, client)
+        if (loopstart === true) {
+            loops.helpLoop(channel, client)
+            loops.socialLoop(channel, client)
+            if (specials) {
+                loops.specialLoop(channel, client)
+            }
+            loopstart = false
         }
-        
+
+
         if (message.includes('lüge')) {
             lie += 1
         } else if (message.includes('tot')) {
             die += 1
         }
 
-
+        /**
+         * for automatic shoutout
+         */
         if (!viewer.includes(tags.username)) { // Nutzer schreibt zum ersten mal
 
             if (streamer.includes(tags.username)) { // Nutzer ist in der Streamerliste
@@ -58,6 +74,9 @@ client.connect().then(() => {
             }
             viewer.push(tags.username);
         }
+        /**
+         * automatic shoutout end
+         */
 
         if (self || !message.startsWith('!')) return;
 
@@ -67,6 +86,8 @@ client.connect().then(() => {
 
 
         switch (command) {
+
+
 
             /**
              * HELP COMMAND
@@ -78,24 +99,23 @@ client.connect().then(() => {
             /**
              * TEXT COMMAND
              */
-
             case 'words':
                 textCommands.words(channel, client, lie, die)
                 break;
             case 'hey':
-               textCommands.hey(channel, client, tags)
+                textCommands.hey(channel, client, tags)
                 break;
             case 'discord':
-                textCommands.discord(channel,client)
+                textCommands.discord(channel, client)
                 break;
             case 'github': case 'gh':
-                textCommands.github(channel,client, tags)
+                textCommands.github(channel, client, tags)
                 break;
             case 'trinken': case 'trink': case 'prost':
                 textCommands.drink(channel, client, tags)
                 break;
             case 'schedule': case 'zeitplan':
-                textCommands.schedule(channel,client,specials)
+                textCommands.schedule(channel, client, specials)
                 break;
 
             /**
@@ -162,15 +182,43 @@ client.connect().then(() => {
              * FRIENDS COMMAND
              */
             case 'friends':
-                friends.friend(twitchApiBaseUrl, client, channel, tags, axios)
+                friends.friend(twitchApiBaseUrl, client, channel, tags)
                 break;
 
             /**
              * SHOUTOUT COMMAND
+             * for manual shoutout
              */
             case 'so':
                 if (tags['user-type'] !== 'mod' && tags.username !== 'tetsuyagames') return;
-                functions.shoutout(twitchApiBaseUrl, client, channel, username, axios)
+                // functions.shoutout(twitchApiBaseUrl, client, channel, username, axios)
+                try {
+                    const [username] = args
+                    let shoutout = "";
+                    const userUrl = `${twitchApiBaseUrl}/users?login=${username}`;
+                    const headers = {
+                        headers: {
+                            'Client-Id': process.env.CLIENT_ID,
+                            Authorization: `Bearer ${process.env.APP_TOKEN}`
+                        },
+                    };
+                    const repsonseUser = await axios.get(userUrl, headers);
+                    const userId = repsonseUser.data.data[0].id;
+                    if (!userId) return;
+        
+                    shoutout = `Werft doch mal einen Blick bei https://twitch.tv/${repsonseUser.data.data[0].display_name} rein.`
+                    try {
+                        const channelUrl = `${twitchApiBaseUrl}/channels?broadcaster_id=${userId}`;
+                        const responseChannel = await axios.get(channelUrl, headers);
+                        const game = responseChannel.data.data[0].game_name;
+                        if (game.length > 0) {
+                            shoutout += ` Es wurde ${game} als letztes gestreamt.`
+                        }
+                    } catch (ex) { }
+                    client.say(channel, shoutout);
+                } catch (err) {
+                    console.log(err);
+                }
                 break;
         }
 
