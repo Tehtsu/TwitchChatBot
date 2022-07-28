@@ -29,7 +29,7 @@ const substr = ' '
 let lie = 0
 let die = 0
 let loopstart = true
-let streamer = [/* 'tetsuyagames', */
+let streamer = ['tetsuyagames',
     'tedwigtv',
     'profi4mateur',
     'niluus_arcade',
@@ -73,6 +73,12 @@ client.connect().then(() => {
                 functions.shoutout(twitchApiBaseUrl, client, channel, tags.username, axios);
             }
             viewer.push(tags.username);
+        }
+
+        if(viewer.includes('tedwigtv') && streamer.includes('tedwigtv')){
+            player.play('./sounds/halloteddy.mp3', function (err) {
+                if (err) throw err
+            })
         }
         /**
          * automatic shoutout end
