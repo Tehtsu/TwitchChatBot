@@ -23,25 +23,32 @@ const client = new tmi.Client({
 const twitchApiBaseUrl = 'https://api.twitch.tv/helix';
 const weatherApiBaseUrl = 'https://api.openweathermap.org';
 
+let welcomeTed = true
+let welcomeMama = true
 let tagIsSet = false
 const specials = true
 const substr = ' '
 let lie = 0
 let die = 0
 let loopstart = true
-let streamer = ['tetsuyagames',
+let streamer = [/* 'tetsuyagames', */
     'tedwigtv',
     'profi4mateur',
     'niluus_arcade',
     'mrs_doerte',
     'battlevbk',
     'aimgel0oz',
-    'gracelesssky'
+    'gracelesssky',
+    'imp_unicorn',
+    'babyboo8212'
 ]
 let viewer = []
 
 let randomNumber = Math.floor(Math.random() * 20)
 console.log(randomNumber);
+
+
+
 
 
 client.connect().then(() => {
@@ -59,9 +66,9 @@ client.connect().then(() => {
 
 
         if (message.includes('lüge')) {
-            lie += 1
+            lie++
         } else if (message.includes('tot')) {
-            die += 1
+            die++
         }
 
         /**
@@ -75,14 +82,23 @@ client.connect().then(() => {
             viewer.push(tags.username);
         }
 
-        if(viewer.includes('tedwigtv') && streamer.includes('tedwigtv')){
-            player.play('./sounds/halloteddy.mp3', function (err) {
-                if (err) throw err
-            })
-        }
         /**
          * automatic shoutout end
          */
+
+        if (viewer.includes('tedwigtv') && streamer.includes('tedwigtv') && welcomeTed === true) {
+            player.play('./sounds/halloteddy.mp3', function (err) {
+                if (err) throw err
+            })
+            welcomeTed = false
+        }
+
+        if (viewer.includes('mrsjinni') && welcomeMama === true) {
+            player.play('./sounds/halloMama.mp3', function (err) {
+                if (err) throw err
+            })
+            welcomeMama = false
+        }
 
         if (self || !message.startsWith('!')) return;
 
@@ -91,8 +107,9 @@ client.connect().then(() => {
         const command = args.shift().toLowerCase();
 
 
-        switch (command) {
 
+
+        switch (command) {
 
 
             /**
@@ -144,6 +161,8 @@ client.connect().then(() => {
             /**
              * SOUND COMMANDS
              */
+
+
             case 'hallo':
                 player.play('./sounds/leonHallo.mp3', function (err) {
                     if (err) throw err
@@ -188,7 +207,7 @@ client.connect().then(() => {
              * FRIENDS COMMAND
              */
             case 'friends':
-                friends.friend(twitchApiBaseUrl, client, channel, tags)
+                friends.friend(twitchApiBaseUrl, client, channel, tags, axios)
                 break;
 
             /**
@@ -210,7 +229,7 @@ client.connect().then(() => {
                     const repsonseUser = await axios.get(userUrl, headers);
                     const userId = repsonseUser.data.data[0].id;
                     if (!userId) return;
-        
+
                     shoutout = `Werft doch mal einen Blick bei https://twitch.tv/${repsonseUser.data.data[0].display_name} rein.`
                     try {
                         const channelUrl = `${twitchApiBaseUrl}/channels?broadcaster_id=${userId}`;
