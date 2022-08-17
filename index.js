@@ -2,12 +2,14 @@ const tmi = require('tmi.js');
 const axios = require('axios').default;
 const player = require('play-sound')(opts = {})
 require('dotenv').config()
-const functions = require('./shoutout.js')
-const weatherFunction = require('./weather.js')
-const games = require('./games.js')
-const friends = require('./friends.js')
-const loops = require('./loops.js')
-const textCommands = require('./words.js')
+const functions = require('./src/commands/shoutout.js')
+const weatherFunction = require('./src/commands/weather.js')
+const games = require('./src/commands/games.js')
+const friends = require('./src/commands/friends.js')
+const loops = require('./src/commands/loops.js')
+const textCommands = require('./src/commands/words.js')
+const smilys = require('./src/commands/smily.js')
+const sounds = require('./src/commands/sounds.js')
 const overlay = require('./app.js')
 
 const client = new tmi.Client({
@@ -25,8 +27,8 @@ const weatherApiBaseUrl = 'https://api.openweathermap.org';
 
 let welcomeTed = true
 let welcomeMama = true
-let tagIsSet = false
 const specials = true
+let tagIsSet = false
 const substr = ' '
 let lie = 0
 let die = 0
@@ -40,7 +42,9 @@ let streamer = [/* 'tetsuyagames', */
     'aimgel0oz',
     'gracelesssky',
     'imp_unicorn',
-    'babyboo8212'
+    'babyboo8212',
+    'soestgamingDave',
+    'huboch'
 ]
 let viewer = []
 
@@ -116,7 +120,7 @@ client.connect().then(() => {
              * HELP COMMAND
              */
             case 'help': case 'command': case 'cmd':
-                client.say(channel, 'Folgende commands gibt es: !smily, !trinken, !trink, !prost, !github, !gh, !discord, !friends, !wetter, !hey, !hallo, !cmd, !bud, !heim, !fanfare, !lurk, !guess <zahl>, !dice und !würfeln. Bei einigen commands könnt ihr optional noch einen Wert wie eine Stadt oder eine Zahl eingeben.')
+                client.say(channel, 'Folgende commands gibt es: !socials,!smily, !trinken, !trink, !prost, !github, !gh, !discord, !friends, !wetter, !hey, !hallo, !cmd, !bud, !heim, !fanfare, !lurk, !guess <zahl>, !dice und !würfeln. Bei einigen commands könnt ihr optional noch einen Wert wie eine Stadt oder eine Zahl eingeben.')
                 break;
 
             /**
@@ -135,53 +139,43 @@ client.connect().then(() => {
                 textCommands.github(channel, client, tags)
                 break;
             case 'trinken': case 'trink': case 'prost':
-                textCommands.drink(channel, client, tags)
+                textCommands.drink(channel, client, tags, player)
                 break;
             case 'schedule': case 'zeitplan':
                 textCommands.schedule(channel, client, specials)
+                break;
+            case 'socials':
+                textCommands.socials(channel, client)
                 break;
 
             /**
             * LURK COMMAND
             */
             case 'lurk':
-                client.say(channel, `Danke für deinen Lurk @${tags['display-name']}.`)
+                textCommands.lurk(channel, client, tags)
                 break;
 
             /**
              * SMILY COMMAND
              */
             case 'smily':
-
-                let smilys = ['💩', '❤', '😎', '🔥', '🍕', '🍨', '👋', '🥵', '🥶', '🎉'];
-                let smilyNumber = Math.floor(Math.random() * smilys.length);
-                client.say(channel, `${tags['display-name']} schickt einen ${smilys[smilyNumber]} Smily in die Runde`)
+                smilys.smily(client, channel, tags)
                 break;
 
             /**
              * SOUND COMMANDS
              */
-
-
             case 'hallo':
-                player.play('./sounds/leonHallo.mp3', function (err) {
-                    if (err) throw err
-                })
+                sounds.hallo(player)
                 break;
             case 'bud':
-                player.play('./sounds/Bud.mp3', function (err) {
-                    if (err) throw err
-                })
+                sounds.bud(player)
                 break;
             case 'heim':
-                player.play('./sounds/hömaaufgehmaheim.mp3', function (err) {
-                    if (err) throw err
-                })
+                sounds.heim(player)
                 break;
             case 'fanfare':
-                player.play('./sounds/pups.mp3', function (err) {
-                    if (err) throw err
-                })
+                sounds.fanfare(player)
                 break;
 
             /**
@@ -207,7 +201,7 @@ client.connect().then(() => {
              * FRIENDS COMMAND
              */
             case 'friends':
-                friends.friend(twitchApiBaseUrl, client, channel, tags, axios)
+                friends.friend(twitchApiBaseUrl, client, channel, tags, axios, tagIsSet)
                 break;
 
             /**
@@ -243,6 +237,7 @@ client.connect().then(() => {
                 } catch (err) {
                     console.log(err);
                 }
+
                 break;
         }
 

@@ -8,9 +8,7 @@ const helpLoop = function (channel, client) {
 const socialLoop = function (channel, client) {
     console.log('start social loop')
     setInterval(() => {
-        client.say(channel, `Instagram: https://www.instagram.com/tetsuyagames/ \n 
-    YouTube: https://www.youtube.com/user/TAirLP \n
-    Website: https://nerd-zone.eu`)
+        client.say(channel, 'Meine Socials findet ihr hier: https://linktr.ee/tetsuuyagames')
     }, 900000)
 }
 

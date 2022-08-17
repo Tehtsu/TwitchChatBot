@@ -1,6 +1,6 @@
-const player = require('play-sound')(opts = {})
 
-const words =  (channel, client, lie, die) => {
+
+const words = (channel, client, lie, die) => {
     client.say(channel, `Es wurde  'lüge' ${lie} mal und 'tot' ${die} mal gesagt.`)
 }
 
@@ -19,7 +19,7 @@ const github = (channel, client, tags) => {
     client.say(channel, `@${tags['display-name']} hier gehts zu meinem Github -> https://github.com/TetsuyaGames?tab=repositories`)
 }
 
-const drink = (channel, client, tags) => {
+const drink = (channel, client, tags, player) => {
     client.say(channel, `${tags['display-name']} möchte das @TetsuyaGames etwas trinkt, prost!`)
     player.play('./sounds/lecker-bierchen.mp3', (err) => {
         if (err) throw err
@@ -34,11 +34,21 @@ const schedule = (channel, client, specials) => {
     }
 }
 
+const socials = (channel, client) => {
+    client.say(channel, 'Meine Socials: https://linktr.ee/tetsuuyagames')
+}
+
+const lurk = (channel, client, tags) => {
+    client.say(channel, `Danke für deinen Lurk @${tags['display-name']}.`)
+}
+
 module.exports = {
     words,
     hey,
     discord,
     github,
     drink,
-    schedule
+    schedule,
+    socials,
+    lurk
 }
