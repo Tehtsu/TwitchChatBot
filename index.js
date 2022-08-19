@@ -44,7 +44,8 @@ let streamer = [/* 'tetsuyagames', */
     'imp_unicorn',
     'babyboo8212',
     'soestgamingDave',
-    'huboch'
+    'huboch',
+    'bergserkertv'
 ]
 let viewer = []
 
