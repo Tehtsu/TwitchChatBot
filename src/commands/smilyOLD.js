@@ -7,5 +7,5 @@ const smily = (client, channel, tags) => {
 }
 
 module.exports = {
-    smily
+    // smily
 }

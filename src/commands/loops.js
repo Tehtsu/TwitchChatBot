@@ -15,7 +15,7 @@ const socialLoop = function (channel, client) {
 const specialLoop = function (channel, client) {
     console.log('start special loop')
     setInterval(() => {
-        client.say(channel, 'Am 27.08.2022 gibt es ab 22 Uhr einen Birthday Stream.')
+        client.say(channel, 'Mit !birthday kannst du mir Gratulieren ;)')
     }, 900000)
 }
 

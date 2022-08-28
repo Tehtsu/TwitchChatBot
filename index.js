@@ -1,16 +1,14 @@
+const fs = require('fs')
 const tmi = require('tmi.js');
+require('dotenv').config()
 const axios = require('axios').default;
 const player = require('play-sound')(opts = {})
-require('dotenv').config()
 const functions = require('./src/commands/shoutout.js')
 const weatherFunction = require('./src/commands/weather.js')
 const games = require('./src/commands/games.js')
 const friends = require('./src/commands/friends.js')
 const loops = require('./src/commands/loops.js')
 const textCommands = require('./src/commands/words.js')
-const smilys = require('./src/commands/smily.js')
-const sounds = require('./src/commands/sounds.js')
-const overlay = require('./app.js')
 
 const client = new tmi.Client({
     options: { debug: true },
@@ -53,7 +51,23 @@ let randomNumber = Math.floor(Math.random() * 20)
 console.log(randomNumber);
 
 
+const commandsMap = new Map()
+const commandFiles = fs.readdirSync('./commands').filter((f) => f.endsWith('.js'))
+const setFileCommands = async () => {
+    commandFiles.forEach((file) => {
+        const command = require(`./commands/${file}`)
 
+        command.alias.forEach((alias) => {
+            commandsMap.set(alias, command.execute)
+        })
+    })
+}
+
+const setCommands = async () => {
+    commandsMap.clear()
+    await setFileCommands()
+}
+setCommands()
 
 
 client.connect().then(() => {
@@ -111,72 +125,17 @@ client.connect().then(() => {
         const args = message.slice(1).split(' ');
         const command = args.shift().toLowerCase();
 
-
+        if (commandsMap.has(command)) {
+            const commandFunction = commandsMap.get(command)
+            console.log(commandFunction)
+            commandFunction(client, channel, args, tags, twitchApiBaseUrl, axios, lie, die)
+        }
 
 
         switch (command) {
 
 
-            /**
-             * HELP COMMAND
-             */
-            case 'help': case 'command': case 'cmd':
-                client.say(channel, 'Folgende commands gibt es: !socials,!smily, !trinken, !trink, !prost, !github, !gh, !discord, !friends, !wetter, !hey, !hallo, !cmd, !bud, !heim, !fanfare, !lurk, !guess <zahl>, !dice und !würfeln. Bei einigen commands könnt ihr optional noch einen Wert wie eine Stadt oder eine Zahl eingeben.')
-                break;
-
-            /**
-             * TEXT COMMAND
-             */
-            case 'words':
-                textCommands.words(channel, client, lie, die)
-                break;
-            case 'hey':
-                textCommands.hey(channel, client, tags)
-                break;
-            case 'discord':
-                textCommands.discord(channel, client)
-                break;
-            case 'github': case 'gh':
-                textCommands.github(channel, client, tags)
-                break;
-            case 'trinken': case 'trink': case 'prost':
-                textCommands.drink(channel, client, tags, player)
-                break;
-            case 'schedule': case 'zeitplan':
-                textCommands.schedule(channel, client, specials)
-                break;
-            case 'socials':
-                textCommands.socials(channel, client)
-                break;
-
-            /**
-            * LURK COMMAND
-            */
-            case 'lurk':
-                textCommands.lurk(channel, client, tags)
-                break;
-
-            /**
-             * SMILY COMMAND
-             */
-            case 'smily':
-                smilys.smily(client, channel, tags)
-                break;
-
-            /**
-             * SOUND COMMANDS
-             */
-            case 'hallo':
-                sounds.hallo(player)
-                break;
-            case 'bud':
-                sounds.bud(player)
-                break;
-            case 'heim':
-                sounds.heim(player)
-                break;
-            case 'fanfare':
-                sounds.fanfare(player)
+            case 'birthday': textCommands.birthday(channel, client, tags, player)
                 break;
 
             /**
@@ -203,42 +162,6 @@ client.connect().then(() => {
              */
             case 'friends':
                 friends.friend(twitchApiBaseUrl, client, channel, tags, axios, tagIsSet)
-                break;
-
-            /**
-             * SHOUTOUT COMMAND
-             * for manual shoutout
-             */
-            case 'so':
-                if (tags['user-type'] !== 'mod' && tags.username !== 'tetsuyagames') return;
-                try {
-                    const [username] = args
-                    let shoutout = "";
-                    const userUrl = `${twitchApiBaseUrl}/users?login=${username}`;
-                    const headers = {
-                        headers: {
-                            'Client-Id': process.env.CLIENT_ID,
-                            Authorization: `Bearer ${process.env.APP_TOKEN}`
-                        },
-                    };
-                    const repsonseUser = await axios.get(userUrl, headers);
-                    const userId = repsonseUser.data.data[0].id;
-                    if (!userId) return;
-
-                    shoutout = `Werft doch mal einen Blick bei https://twitch.tv/${repsonseUser.data.data[0].display_name} rein.`
-                    try {
-                        const channelUrl = `${twitchApiBaseUrl}/channels?broadcaster_id=${userId}`;
-                        const responseChannel = await axios.get(channelUrl, headers);
-                        const game = responseChannel.data.data[0].game_name;
-                        if (game.length > 0) {
-                            shoutout += ` Es wurde ${game} als letztes gestreamt.`
-                        }
-                    } catch (ex) { }
-                    client.say(channel, shoutout);
-                } catch (err) {
-                    console.log(err);
-                }
-
                 break;
         }
 
