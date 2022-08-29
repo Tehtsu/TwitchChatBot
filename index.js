@@ -4,11 +4,8 @@ require('dotenv').config()
 const axios = require('axios').default;
 const player = require('play-sound')(opts = {})
 const functions = require('./src/commands/shoutout.js')
-const weatherFunction = require('./src/commands/weather.js')
-const games = require('./src/commands/games.js')
-const friends = require('./src/commands/friends.js')
 const loops = require('./src/commands/loops.js')
-const textCommands = require('./src/commands/words.js')
+// const textCommands = require('./src/commands/words.js')
 
 const client = new tmi.Client({
     options: { debug: true },
@@ -21,7 +18,6 @@ const client = new tmi.Client({
 
 // global variables
 const twitchApiBaseUrl = 'https://api.twitch.tv/helix';
-const weatherApiBaseUrl = 'https://api.openweathermap.org';
 
 let welcomeTed = true
 let welcomeMama = true
@@ -128,41 +124,13 @@ client.connect().then(() => {
         if (commandsMap.has(command)) {
             const commandFunction = commandsMap.get(command)
             console.log(commandFunction)
-            commandFunction(client, channel, args, tags, twitchApiBaseUrl, axios, lie, die)
+            commandFunction(client, channel, args, tags, twitchApiBaseUrl, axios, substr, message, randomNumber)
         }
 
 
         switch (command) {
-
-
-            case 'birthday': textCommands.birthday(channel, client, tags, player)
-                break;
-
-            /**
-             * GAME COMMANDS
-             */
-            case 'dice': case 'würfeln':
-                games.dice(message, substr, client, channel, tags)
-                break;
-            case 'guess':
-                games.guess(message, substr, client, channel, tags, randomNumber)
-                break;
-
-            /**
-             * WEATHER COMMAND
-             */
-            case 'wetter':
-                weatherFunction.weather(weatherApiBaseUrl, message, substr, client, channel, tags, axios)
-                break;
-
-
-
-            /**
-             * FRIENDS COMMAND
-             */
-            case 'friends':
-                friends.friend(twitchApiBaseUrl, client, channel, tags, axios, tagIsSet)
-                break;
+            // case 'birthday': textCommands.birthday(channel, client, tags, player)
+            //     break;
         }
 
     })

@@ -48,7 +48,7 @@ const lurk = (channel, client, tags) => {
 }
 
 module.exports = {
-    words,
+    // words,
     // hey,
     /* discord, */
     /* github, */
