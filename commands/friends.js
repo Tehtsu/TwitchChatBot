@@ -1,5 +1,5 @@
 module.exports = {
-    alias: ['tags', 'gamertags', 'gt'],
+    alias: ['tags', 'gamertags', 'gt', 'friends'],
     async execute(client, channel, args, tags) {
         let tagIsSet = true
         /* try {

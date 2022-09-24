@@ -21,7 +21,7 @@ const twitchApiBaseUrl = 'https://api.twitch.tv/helix';
 
 let welcomeTed = true
 let welcomeMama = true
-const specials = true
+const specials = false
 let tagIsSet = false
 const substr = ' '
 let lie = 0
@@ -39,7 +39,10 @@ let streamer = [/* 'tetsuyagames', */
     'babyboo8212',
     'soestgamingDave',
     'huboch',
-    'bergserkertv'
+    'bergserkertv',
+    'deleero',
+    'cheesyp00se',
+    'klixxter'
 ]
 let viewer = []
 
@@ -73,6 +76,7 @@ client.connect().then(() => {
         if (loopstart === true) {
             loops.helpLoop(channel, client)
             loops.socialLoop(channel, client)
+            loops.discordLoop(channel, client)
             if (specials) {
                 loops.specialLoop(channel, client)
             }

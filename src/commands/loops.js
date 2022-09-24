@@ -1,5 +1,5 @@
 const helpLoop = function (channel, client) {
-    console.log('start  help loop')
+    console.log('start help loop')
     setInterval(() => {
         client.say(channel, 'Mit !help, !commands oder !cmd bekommt ihr eine Übersicht der Befehle.')
     }, 1800000) // 60000ms = 60s = 1 min
@@ -19,8 +19,16 @@ const specialLoop = function (channel, client) {
     }, 900000)
 }
 
+const discordLoop = function (channel, client) {
+    console.log('start discord loop')
+    setInterval(() => {
+        client.say(channel, '🤓 Schaut auch gern auf meinem Disocrd vorbei: https://discord.gg/RkfYnQB')
+    }, 600000)
+}
+
 module.exports = {
     helpLoop,
     socialLoop,
-    specialLoop
+    specialLoop,
+    discordLoop
 }
