@@ -1,4 +1,6 @@
+/*
 const axios = require('axios').default;
+
 require('dotenv').config()
 
 async function shoutout(twitchApiBaseUrl, client, channel, username, axios) {
@@ -36,3 +38,4 @@ async function shoutout(twitchApiBaseUrl, client, channel, username, axios) {
 module.exports = {
     shoutout
 }
+ */

@@ -22,7 +22,7 @@ module.exports = {
 
             const channelUrl = `${twitchApiBaseUrl}/channels?broadcaster_id=${userId}`
             const responseChannel = await axios.get(channelUrl, headers)
-            const title = responseChannel.data.data[0]?.title
+            //const title = responseChannel.data.data[0]?.title
             const game = responseChannel.data.data[0]?.game_name
             if (!game) {
                 client.say(channel, `Werft doch mal einen Blick bei https://twitch.tv/${repsonseUser.data.data[0].display_name} rein.`)
