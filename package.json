@@ -9,9 +9,10 @@
   "author": "TetsuyaGames",
   "license": "MIT",
   "dependencies": {
+    "audic": "^3.0.1",
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
-    "nodemon": "^2.0.20",
+    "nodemon": "^2.0.21",
     "play-sound": "^1.1.5",
     "tmi.js": "^1.8.5"
   }

@@ -3,7 +3,7 @@
 module.exports = {
     alias: ['shoutout', 'so'],
     async execute(client, channel, args, tags, twitchApiBaseUrl, axios) {
-        if (tags['user-type'] !== 'mod' && tags.username !== 'tetsuyagames') return;
+        if (tags['user-type'] !== 'mod' && tags.username !== 'tetzuttv') return;
 
         try {
             const [username] = args;

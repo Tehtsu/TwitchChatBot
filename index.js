@@ -3,7 +3,7 @@ const tmi = require('tmi.js');
 require('dotenv').config()
 const axios = require('axios').default;
 const player = require('play-sound')(opts = {})
-const functions = require('./src/commands/shoutout.js')
+//const functions = require('./src/commands/shoutout.js')
 const loops = require('./src/commands/loops.js')
 // const textCommands = require('./src/commands/words.js')
 
@@ -13,7 +13,7 @@ const client = new tmi.Client({
         username: process.env.BOT_NAME,
         password: process.env.OAUTH_TOKEN
     },
-    channels: ['tetsuyagames']
+    channels: ['tetzuttv']
 });
 
 // global variables
@@ -22,18 +22,17 @@ const twitchApiBaseUrl = 'https://api.twitch.tv/helix';
 let welcomeTed = true
 let welcomeMama = true
 const specials = false
-let tagIsSet = false
+// let tagIsSet = false
 const substr = ' '
 let lie = 0
 let die = 0
 let loopstart = true
-let streamer = [/* 'tetsuyagames', */
+let streamer = [/*'tetzuttv',*/
     'tedwigtv',
     'profi4mateur',
     'niluus_arcade',
     'mrs_doerte',
     'battlevbk',
-    'aimgel0oz',
     'gracelesssky',
     'imp_unicorn',
     'babyboo8212',
@@ -95,7 +94,8 @@ let streamer = [/* 'tetsuyagames', */
     'witched_batty',
     'woolainy',
     'xxthemagics',
-    'zydrakos'
+    'zydrakos',
+    'choor_tv'
 ]
 let viewer = []
 
@@ -122,19 +122,32 @@ const setCommands = async () => {
 setCommands()
 
 
+
 client.connect().then(() => {
 
     client.on('message', async (channel, tags, message, self) => {
 
         if (loopstart === true) {
             loops.helpLoop(channel, client)
-            loops.socialLoop(channel, client)
-            loops.discordLoop(channel, client)
+            //loops.socialLoop(channel, client)
+            /* loops.specialLoop(channel, client) */
+
+            /*loops.discordLoop(channel, client)*/
             if (specials) {
                 loops.specialLoop(channel, client)
             }
             loopstart = false
         }
+
+        /* setInterval(() => {
+            if (self || tags.username === 'tetsuyagames' || tags.username === 'tetsesbot') {
+                return;
+            } else {
+                loopstart = false
+                console.log("Loops Paused!")
+            }
+
+        }, 5 * 60 * 1000) */
 
 
         if (message.includes('lüge')) {
@@ -149,7 +162,9 @@ client.connect().then(() => {
         if (!viewer.includes(tags.username)) { // Nutzer schreibt zum ersten mal
 
             if (streamer.includes(tags.username)) { // Nutzer ist in der Streamerliste
-                functions.shoutout(twitchApiBaseUrl, client, channel, tags.username, axios);
+                client.say(channel, `!so ${tags.username}`)
+                //client.say(channel, `Werft doch mal einen Blick bei https://twitch.tv/${tags.username} rein.`)
+                //functions.shoutout(twitchApiBaseUrl, client, channel, tags.username, axios);
             }
             viewer.push(tags.username);
         }

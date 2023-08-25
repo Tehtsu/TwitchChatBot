@@ -15,20 +15,20 @@ const socialLoop = function (channel, client) {
 const specialLoop = function (channel, client) {
     console.log('start special loop')
     setInterval(() => {
-        client.say(channel, 'Mit !birthday kannst du mir Gratulieren ;)')
+        client.say(channel, 'Gilde gesucht? Kein Problem komm zu Kame auf Blackmoore')
     }, 900000)
 }
 
-const discordLoop = function (channel, client) {
+/*const discordLoop = function (channel, client) {
     console.log('start discord loop')
     setInterval(() => {
         client.say(channel, '🤓 Schaut auch gern auf meinem Disocrd vorbei: https://discord.gg/RkfYnQB')
     }, 600000)
-}
+}*/
 
 module.exports = {
     helpLoop,
-    socialLoop,
-    specialLoop,
-    discordLoop
+    socialLoop
+    /* specialLoop, */
+    /*discordLoop*/
 }
