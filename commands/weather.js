@@ -3,15 +3,36 @@ const weatherApiBaseUrl = 'https://api.openweathermap.org';
 module.exports = {
     alias: ['wetter', 'weather'],
     async execute(client, channel, args, tags, twitchApiBaseUrl, axios, substr, message) {
+        const replaceUmlauts = (str) => {
+            return str.replace(/ö/g, 'oe')
+                .replace(/ü/g, 'ue')
+                .replace(/ä/g, 'ae')
+                .replace(/Ö/g, 'Oe')
+                .replace(/Ü/g, 'Ue')
+                .replace(/Ä/g, 'Ae');
+        };
+
+        const restoreUmlauts = (str) => {
+            return str.replace(/oe/g, 'ö')
+                .replace(/ue/g, 'ü')
+                .replace(/ae/g, 'ä')
+                .replace(/Oe/g, 'Ö')
+                .replace(/Ue/g, 'Ü')
+                .replace(/Ae/g, 'Ä');
+        };
+
+        const capitalizeAfterParenthesis = (str) => {
+            return str.replace(/\((.)/, (_, c) => `(${c.toUpperCase()}`);
+        };
+
         if (message.includes(substr)) {
             const newMessage = message.split(' ');
             newMessage.splice(0, 1);
-            const city = newMessage.toString().toLowerCase();
-            const uppercaseCity = city.charAt(0).toUpperCase() + city.slice(1);
-            if (city.includes('ö') || city.includes('ü') || city.includes('ä')) {
-                client.say(channel, `@${tags['display-name']}, bitte formuliere deine Anfrage nicht mit ö,ä oder ü sondern mit oe,ue oder ae.`)
-            }
-            else {
+            let city = newMessage.toString().toLowerCase();
+            city = replaceUmlauts(city)
+            let uppercaseCity = city.charAt(0).toUpperCase() + city.slice(1);
+            uppercaseCity = restoreUmlauts(uppercaseCity)
+            uppercaseCity = capitalizeAfterParenthesis(uppercaseCity)
                 try {
                     const geoUrl = `${weatherApiBaseUrl}/geo/1.0/direct?q=${city}&appid=${process.env.WEATHER_KEY}`;
                     const responseWeatherUser = await axios.get(geoUrl);
@@ -28,7 +49,6 @@ module.exports = {
                 } catch (err) {
                     console.log(err);
                 }
-            }
         } else {
             try {
                 const url = `${weatherApiBaseUrl}/data/2.5/weather?lat=52.5170365&lon=13.3888599&units=metric&lang=de&appid=${process.env.WEATHER_KEY}`;

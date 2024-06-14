@@ -8,7 +8,7 @@ const loops = require('./src/commands/loops.js')
 // const textCommands = require('./src/commands/words.js')
 
 const client = new tmi.Client({
-    options: { debug: true },
+    options: {debug: true},
     identity: {
         username: process.env.BOT_NAME,
         password: process.env.OAUTH_TOKEN
@@ -32,7 +32,7 @@ axios.post(tokenUrl, null, {
     headers: {
         "Content-Type": 'application/x-www-form-urlencoded'
     }
-}). then(response => {
+}).then(response => {
     console.log('Token: ', response.data.access_token)
     bearerToken = response.data.access_token
 }).catch(error => {
@@ -145,7 +145,6 @@ const setCommands = async () => {
 setCommands()
 
 
-
 client.connect().then(() => {
 
     client.on('message', async (channel, tags, message, self) => {
@@ -210,7 +209,7 @@ client.connect().then(() => {
             welcomeMama = false
         }
 
-        if (self || !message.startsWith('!')) return;
+        if (/*self ||*/ !message.startsWith('!')) return;
 
 
         const args = message.slice(1).split(' ');
