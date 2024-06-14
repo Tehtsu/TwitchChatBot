@@ -4,7 +4,7 @@ module.exports = {
         let tagIsSet = 'tot' // mögliche Tags sind, TOT für outlast und mp für alle anderen Multiplayer spiele
         const tammel = true
         try {
-            const userUrl = `${twitchApiBaseUrl}/streams?user_login=flowlific6`;
+            const userUrl = `${twitchApiBaseUrl}/streams?user_login=tetzuttv`;
             const headers = {
                 headers: {
                     'Client-Id': process.env.CLIENT_ID,
