@@ -2,9 +2,9 @@
 
 module.exports = {
     alias: ['shoutout', 'so'],
-    async execute(client, channel, args, tags, twitchApiBaseUrl, axios) {
+    async execute(client, channel, args, tags, twitchApiBaseUrl, axios, substr, message, randomNumber, bearerToken) {
         if (tags['user-type'] !== 'mod' && tags.username !== 'tetzuttv') return;
-
+        console.log('SO.JS: ',bearerToken)
         try {
             const [username] = args;
 
@@ -12,7 +12,7 @@ module.exports = {
             const headers = {
                 headers: {
                     'Client-Id': process.env.CLIENT_ID,
-                    Authorization: `Bearer ${process.env.APP_TOKEN}`
+                    Authorization: `Bearer ${bearerToken}`
                 },
             }
 

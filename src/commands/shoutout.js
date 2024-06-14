@@ -3,7 +3,7 @@ const axios = require('axios').default;
 
 require('dotenv').config()
 
-async function shoutout(twitchApiBaseUrl, client, channel, username, axios) {
+async function shoutout(twitchApiBaseUrl, client, channel, username, axios, substr, message, randomNumber, bearerToken) {
     const shoutout = async function (twitchApiBaseUrl, client, channel, username, axios) {
         client.say(channel, `!so ${username}`)
         try {
@@ -12,7 +12,7 @@ async function shoutout(twitchApiBaseUrl, client, channel, username, axios) {
             const headers = {
                 headers: {
                     'Client-Id': process.env.CLIENT_ID,
-                    Authorization: `Bearer ${process.env.APP_TOKEN}`
+                    Authorization: `Bearer ${bearerToken}`
                 },
             };
             const repsonseUser = await axios.get(userUrl, headers);

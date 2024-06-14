@@ -1,13 +1,13 @@
 module.exports = {
     alias: ['tags', 'gamertags', 'gt', 'friends'],
-    async execute(client, channel, args, tags) {
+    async execute(client, channel, args, tags, bearertToken) {
         let tagIsSet = true
         /* try {
              const userUrl = `${twitchApiBaseUrl}/users?login=tetsuyagames`;
              const headers = {
                  headers: {
                      'Client-Id': process.env.CLIENT_ID,
-                     Authorization: `Bearer ${process.env.APP_TOKEN}`
+                     Authorization: `Bearer ${bearertToken}`
                  },
              };
              const repsonseID = await axios.get(userUrl, headers);

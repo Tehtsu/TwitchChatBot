@@ -16,6 +16,29 @@ const client = new tmi.Client({
     channels: ['tetzuttv']
 });
 
+let bearerToken = ""
+const tokenUrl = "https://id.twitch.tv/oauth2/token"
+
+
+/**
+ * Get BEARER TOKEN for APP access
+ */
+axios.post(tokenUrl, null, {
+    params: {
+        client_id: process.env.CLIENT_ID,
+        client_secret: process.env.CLIENT_SECRET,
+        grant_type: 'client_credentials'
+    },
+    headers: {
+        "Content-Type": 'application/x-www-form-urlencoded'
+    }
+}). then(response => {
+    console.log('Token: ', response.data.access_token)
+    bearerToken = response.data.access_token
+}).catch(error => {
+    console.error('Token konnt nicht geholt werden!', error.response ? error.response.data : error.message)
+})
+
 // global variables
 const twitchApiBaseUrl = 'https://api.twitch.tv/helix';
 
@@ -163,7 +186,7 @@ client.connect().then(() => {
 
             if (streamer.includes(tags.username)) { // Nutzer ist in der Streamerliste
                 client.say(channel, `!so ${tags.username}`)
-                //client.say(channel, `Werft doch mal einen Blick bei https://twitch.tv/${tags.username} rein.`)
+                client.say(channel, `Werft doch mal einen Blick bei https://twitch.tv/${tags.username} rein.`)
                 //functions.shoutout(twitchApiBaseUrl, client, channel, tags.username, axios);
             }
             viewer.push(tags.username);
@@ -196,7 +219,7 @@ client.connect().then(() => {
         if (commandsMap.has(command)) {
             const commandFunction = commandsMap.get(command)
             console.log(commandFunction)
-            commandFunction(client, channel, args, tags, twitchApiBaseUrl, axios, substr, message, randomNumber)
+            commandFunction(client, channel, args, tags, twitchApiBaseUrl, axios, substr, message, randomNumber, bearerToken)
         }
 
 
